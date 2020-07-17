@@ -1,3 +1,5 @@
+import sys
+
 ############
 # Part 1   #
 ############
@@ -161,6 +163,38 @@ def get_sellability_report(all_harvested_melons):
             f'Harvsted by {melon.harvested_by} from Field {melon.harvest_field} ({melon.is_sellable})')
 
 
+def melons_from_file(melon_types):
+    """Reads in data from a file and returns a list of Melon objects."""
+
+    all_melons_from_file = []
+
+    melons_by_id = make_melon_type_lookup(all_melon_types)
+
+    file = open(sys.argv[1])
+
+    for i, line in enumerate(file):  # iterate over the entries in the data
+        line = line.rstrip()  # remove trailing spaces from each line on the right
+        data = line.split(" ")
+
+        melon_shape = int(data[1])
+        melon_color = int(data[3])
+        melon_type = data[5]
+        harvester = data[8]
+        field = int(data[11])
+
+        melon_i = Melon(melons_by_id[melon_type], melon_shape,
+                        melon_color, field, data[8])
+        melon_i.is_sellable(melon_shape, melon_color, field)
+        all_melons_from_file.append(melon_i)
+
+        print(
+            f'Melon {i}, shape: {melon_shape}, color: {melon_color}, code: {melon_type}, harvested by: {data[8]} in field {field}, sellable state: {melon_i.is_sellable}')
+
+    return all_melons_from_file
+
+
+# print(melons_from_file(all_melon_types))
 all_harvested_melons = make_melons(all_melon_types)
 # print(make_melons(all_melon_types))
-get_sellability_report(all_harvested_melons)
+# get_sellability_report(all_harvested_melons)
+print(melons_from_file(all_melon_types))
